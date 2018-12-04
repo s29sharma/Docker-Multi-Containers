@@ -12,7 +12,7 @@ after_success:
   - docker build -t s29sharma/multi-nginx-docker ./nginx
   - docker build -t s29sharma/multi-server-docker ./server
   - docker build -t s29sharma/multi-worker-docker ./worker
-  - echo "$DOCKER_PASSWORD" | docker login -u "DOCKER_ID" --password-stdin
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   - docker push s29sharma/multi-client-docker
   - docker push s29sharma/multi-nginx-docker
   - docker push s29sharma/multi-server-docker
