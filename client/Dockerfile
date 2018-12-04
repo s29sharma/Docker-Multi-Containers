@@ -2,7 +2,7 @@ FROM node:alpine as builder
 WORKDIR '/app'
 COPY package*.json ./
 COPY . .
-RUN npm run builder
+RUN npm run build
 
 FROM nginx
 EXPOSE 3000
