@@ -3,7 +3,7 @@ services:
   - docker
 #test suites are only in dev docker file
 before_install:
-  - docker build -t s29sharma/react-test -f ./client/Dockefile.dev ./client
+  - docker build -t s29sharma/react-test -f ./client/Dockerfile.dev ./client
 #test running section. -- --coverage is to make sure tests exit after executing instead of going to watch mode
 script:
   - docker run s29sharma/react-test npm test -- --coverage
@@ -13,4 +13,8 @@ after_success:
   - docker build -t s29sharma/multi-server-docker ./server
   - docker build -t s29sharma/multi-worker-docker ./worker
   - echo "$DOCKER_PASSWORD" | docker login -u "DOCKER_ID" --password-stdin
-  
+  - docker push s29sharma/multi-client-docker
+  - docker push s29sharma/multi-nginx-docker
+  - docker push s29sharma/multi-server-docker
+  - docker push s29sharma/multi-worker-docker
+
