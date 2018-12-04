@@ -1,0 +1,51 @@
+#Some very important points to keep in Mind. 
+#Why specify volumes and why can't I see node_modules in project directory.
+#Well that's because we are asking docker to leave node_modules as it is inside /app directory and not copy it or keep it in sync
+#with our local project folder instead we use node_modules inside docker /app/node_modules directory
+#Why ./server:/app....this means copy everything from ./server to ./app or just reference ./server for everything other than 
+#node_modules directory
+version: '3'
+services: 
+  postgres:
+    image: 'postgres:latest'
+  redis:
+    image: 'redis:latest'
+  nginx:
+    restart: always
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./nginx
+    ports:
+      - '3050:80'
+  api:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./server
+    volumes:
+      - /app/node_modules
+      - ./server:/app
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - PGUSER=postgres
+      - PGHOST=postgres
+      - PGDATABASE=postgres
+      - PGPASSWORD=postgres_password
+      - PGPORT=5432
+  client:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./client
+    volumes:
+      - /app/node_modules
+      - ./client:/app
+  worker:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./worker
+    volumes:
+      - /app/node_modules
+      - ./worker:/app
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
